@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Quickie list of all Git repos in a directory, and their status. Shows you
+# which ones need checking in.
+#
+# @author Max Roeleveld <max@hotels.nl>
+
+# Change this to your repo dir.
+REPODIR="/home/max/repos"
+GITBIN="/usr/bin/git"
+
+# Stop editing here
+
+OLDDIR=`pwd`
+cd $REPODIR
+
+for dir in *
+do
+    # Skip non-dirs.
+    if [ ! -d "$dir" ]
+    then
+        continue
+    fi
+
+	cd $dir
+
+    # Skip non-repos.
+    if [ ! -d ".git" ]
+    then
+        continue
+    fi
+
+	if [ -n "`$GITBIN status -s`" ]
+	then
+		echo "$dir:"
+		$GITBIN status -sb
+		echo
+	fi
+
+	cd ..
+done
+
+# Back to wherever we were.
+cd $OLDDIR
+echo
