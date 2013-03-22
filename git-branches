@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# Shows you your repos and which branch they're in.
+
+REPODIR="/home/max/repos"
+GITBIN="/usr/bin/git"
+OLD_PWD=`pwd`
+
+# Go into repo dir, loop through all the things.
+cd $REPODIR
+for dir in *
+do
+    # Skip non-dirs.
+    if [ ! -d "$dir" ]
+    then
+        continue
+    fi
+
+	cd $dir
+
+    # Skip non-repos.
+    if [ ! -d ".git" ]
+    then
+        continue
+    fi
+
+    # First line of `git status` is "# On branch <BRANCHNAME>".
+    STATUS=$(/usr/bin/git status | head -1 | cut -d' ' -f 4)
+    printf "%-20s %s\n" $dir $STATUS
+
+    cd ..
+done
+
+cd $OLD_PWD
+echo
